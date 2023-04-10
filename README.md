@@ -15,10 +15,10 @@
 - Keyboard Required
 ### How To Use
 ```lua
-getgenv().ModMenuName = "Title" --The name you want to display at the top of the gui
+getgenv().ModMenuName = "Mod Menu" --The name you want to display at the top of the gui
 getgenv().ModMenuTheme = "CherryBlossom" --The theme you want the gui to be, we will get into themes after this
 
-local uiLibrary = loadstring("https://raw.githubusercontent.com/KSploit/ModMenuUI/main/Source.lua")() --Load the uiLibrary in
+local uiLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/KSploit/ModMenuUI/main/Source.lua"))() --Load the uiLibrary in
 
 local page = uiLibrary.createPage("Page Name") --Create a new page
 
