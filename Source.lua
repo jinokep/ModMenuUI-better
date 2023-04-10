@@ -99,9 +99,9 @@ uiLibrary.Themes = {
 		SeperatorColor = Color3.fromRGB(65, 47, 26),
 		CounterColor = Color3.fromRGB(65, 47, 26)
 	},
-	Custom = uiLibrary.GenvSettings.ModMenuCustomTheme or uiLibrary.Themes[uiLibrary.GenvSettings.ModMenuTheme] or defaultTheme
 }
 
+uiLibrary.Themes.Custom = uiLibrary.GenvSettings.ModMenuCustomTheme or uiLibrary.Themes[uiLibrary.GenvSettings.ModMenuTheme] or defaultTheme
 uiLibrary.Theme = uiLibrary.Themes.Custom
 uiLibrary.MenuName = uiLibrary.GenvSettings.ModMenuName
 
