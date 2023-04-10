@@ -45,10 +45,12 @@ Images Coming Soon!
 - SpecialForces
 - Poo
 
+!! If you don't set a theme the menu will use the Default theme
+
 ### Applying a theme
 To apply a theme, just type this line before loading ModMenu UI Library
 ```lua
-    getgenv().ModMenuTheme = "CherryBlossom" --Change this to the name of your theme (Must be the exact name including capital letters)
+    getgenv().ModMenuTheme = "CherryBlossom" --Change this to the name of the theme (Must be the exact name including capital letters)
 ```
 ### Custom Themes
 The ModMenu UI Library has a built in way to add your own themes, lets look at how to do it
