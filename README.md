@@ -55,11 +55,11 @@ The ModMenu UI Library has a built in way to add your own themes, lets look at h
 --This will be your theme
 local customTheme = {
   TitleStroke = Color3.new(0,0,0), --Adds a stroke color to your title, set to nil if you don't want stroke
-	Heading1 = Color3.fromRGB(0, 170, 255), --Changes the background color of the title
-	TitleColor = Color3.new(1,1,1), --Changes the textcolor of the title
-	TitleFont = Enum.Font.ArialBold, --Changes the font of the title
-	SeperatorColor = Color3.new(1,1,1), --Changes the line color at the bottom of the menu
-	CounterColor = Color3.new(0,0.75,1) --Changes the textcolor of counters when you hover over them
+  Heading1 = Color3.fromRGB(0, 170, 255), --Changes the background color of the title
+  TitleColor = Color3.new(1,1,1), --Changes the textcolor of the title
+  TitleFont = Enum.Font.ArialBold, --Changes the font of the title
+  SeperatorColor = Color3.new(1,1,1), --Changes the line color at the bottom of the menu
+  CounterColor = Color3.new(0,0.75,1) --Changes the textcolor of counters when you hover over them
 }
 
 --Now to apply your theme, just type this line before loading ModMenu UI Library
