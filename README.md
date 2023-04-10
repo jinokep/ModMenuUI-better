@@ -35,15 +35,15 @@ Themes are a way to customize your GUI, in this section we will take a look at t
 
 ### All Current Themes
 Images Coming Soon!
-![Default](https://github.com/KSploit/ModMenuUI/tree/main/Images)
-![Moon](https://github.com/KSploit/ModMenuUI/tree/main/Imagesm)
-![Racer](https://github.com/KSploit/ModMenuUI/tree/main/Images)
-![Dragon](https://github.com/KSploit/ModMenuUI/tree/main/Images)
-![CherryBlossom](https://github.com/KSploit/ModMenuUI/tree/main/Images)
-![Century](https://github.com/KSploit/ModMenuUI/tree/main/Images)
-![Hacker](https://github.com/KSploit/ModMenuUI/tree/main/Images)
-![SpecialForces](https://github.com/KSploit/ModMenuUI/tree/main/Images)
-![Poo](https://github.com/KSploit/ModMenuUI/tree/main/Images)
+- Default
+- Moon
+- Racer
+- Dragon
+- CherryBlossom
+- Century
+- Hacker
+- SpecialForces
+- Poo
 
 ### Applying a theme
 To apply a theme, just type this line before loading ModMenu UI Library
