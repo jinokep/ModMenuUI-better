@@ -14,7 +14,7 @@
 - PC Only
 - No Flags
 - Keyboard Required
-### How To Use
+## How To Use
 ```lua
 getgenv().ModMenuName = "Mod Menu" --The name you want to display at the top of the gui
 getgenv().ModMenuTheme = "CherryBlossom" --The theme you want the gui to be, we will get into themes next
