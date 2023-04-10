@@ -31,9 +31,9 @@ wait(5)
 uiLibrary.cleanup() --Destroys the gui and disconnects all RBXScriptSignals
 ```
 ### Themes
-Themes are a way to customize your GUI, in this section we will take a look at themes, applying themes, and making your own themes.
+Themes are a way to customize your GUI, in this section we will take a look at built-in themes, applying themes, and making your own themes.
 
-### All Current Themes
+### All Built-In Themes
 Images Coming Soon!
 - Default
 - Moon
