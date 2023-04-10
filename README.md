@@ -33,23 +33,23 @@ uiLibrary.cleanup() --Destroys the gui and disconnects all RBXScriptSignals
 ### Themes
 Themes are a way to customize your GUI, in this section we will take a look at themes, applying themes, and making your own themes.
 
-#### All Current Themes
-!Default(https://google.com)
-!Moon(https://google.com)
-!Racer(https://google.com)
-!Dragon(https://google.com)
-!CherryBlossom(https://google.com)
-!Century(https://google.com)
-!Hacker(https://google.com)
-!SpecialForces(https://google.com)
-!Poo(https://google.com)
+### All Current Themes
+! Default(https://google.com)
+! Moon(https://google.com)
+! Racer(https://google.com)
+! Dragon(https://google.com)
+! CherryBlossom(https://google.com)
+! Century(https://google.com)
+! Hacker(https://google.com)
+! SpecialForces(https://google.com)
+! Poo(https://google.com)
 
-#### Applying a theme
+### Applying a theme
 To apply a theme, just type this line before loading ModMenu UI Library
 ```lua
     getgenv().ModMenuTheme = "CherryBlossom" --Change this to the name of your theme (Must be the exact name including capital letters)
 ```
-#### Custom Themes
+### Custom Themes
 The ModMenu UI Library has a built in way to add your own themes, lets look at how to do it
 ```lua
 --This will be your theme
