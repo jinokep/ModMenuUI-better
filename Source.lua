@@ -702,7 +702,7 @@ function page:toggle(name,callback,toggled)
 		newElement.Toggled = not newElement.Toggled
 		update()
 		if newElement.Callback then
-			newElement.Callback()
+			newElement.Callback(newElement.Toggled)
 		end
 	end
 	
