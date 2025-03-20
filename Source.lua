@@ -184,7 +184,7 @@ function makeGui()
 	ArrowLabel.Size = UDim2.new(0, 30, 1, 0)
 	ArrowLabel.Image = "rbxassetid://13049153962"
 	ArrowLabel.ScaleType = Enum.ScaleType.Fit
-	
+
 	OptionCounter.Name = "OptionCounter"
 	OptionCounter.Parent = Footer
 	OptionCounter.AnchorPoint = Vector2.new(1, 0)
@@ -197,7 +197,7 @@ function makeGui()
 	OptionCounter.Text = "1/1"
 	OptionCounter.TextColor3 = Color3.fromRGB(255, 255, 255)
 	OptionCounter.TextSize = 14.000
-	
+
 	BackKeybindDisplay.Name = "BackKeybindDisplay"
 	BackKeybindDisplay.Parent = Footer
 	BackKeybindDisplay.AnchorPoint = Vector2.new(0, 0)
@@ -221,7 +221,7 @@ function makeGui()
 	Pages.ClipsDescendants = true
 	Pages.Position = UDim2.new(0, 0, 0, 45)
 	Pages.Size = UDim2.new(1, 0, 1, -70)
-	
+
 	return ModMenuUI	
 end
 
@@ -391,7 +391,17 @@ function pagePreset()
 
 	return PagePreset
 end
+function dropdownPreset()
+	local Dropdown = Instance.new("Frame")
 
+	Dropdown.Name = "Dropdown"
+	Dropdown.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Dropdown.BackgroundTransparency = 1
+	Dropdown.BorderSizePixel = 0
+	Dropdown.Size = UDim2.new(1, 0, 0, 20)
+	
+	
+end
 -----------------------------------------------------------------
 
 --Load Presets
@@ -399,6 +409,7 @@ uiLibrary.Presets.Button = buttonPreset()
 uiLibrary.Presets.Toggle = togglePreset()
 uiLibrary.Presets.Value = valuePreset()
 uiLibrary.Presets.Page = pagePreset()
+uiLibrary.Presets.Dropdown = dropdownPreset()
 
 --Shortcuts
 local presets = uiLibrary.Presets
@@ -440,7 +451,7 @@ end
 
 function uiLibrary.toggle(v)
 	local toggleState = v or not gui.Enabled
-	
+
 	if toggleState then
 		uis.MouseBehavior = Enum.MouseBehavior.LockCurrentPosition
 		gui.Enabled = true
@@ -448,7 +459,7 @@ function uiLibrary.toggle(v)
 		uis.MouseBehavior = Enum.MouseBehavior.Default
 		gui.Enabled = false
 	end
-	
+
 	--selectElement(getElement())
 end
 
@@ -488,7 +499,7 @@ function selectElement(element)
 		frame.Label.TextColor3 = Color3.new(0,0,0)
 		selectPosition = frame.Position.Y.Offset
 		currentElement = element
-		
+
 		if frame:FindFirstChild("Counter") then
 			frame.Counter.ArrowLeft.ImageColor3 = Color3.new(0,0,0)
 			frame.Counter.ArrowRight.ImageColor3 = Color3.new(0,0,0)
@@ -511,6 +522,9 @@ end
 
 function back()
 	for _,page in pairs(pages) do
+		if page.Locked then
+			break
+		end
 		local frame = page.Frame
 		if page.Name:lower() == "home" then
 			frame.Visible = true
@@ -519,7 +533,7 @@ function back()
 			frame.Visible = false
 		end
 	end
-	
+
 	selectPosition = 0
 	selectElement(getElement())
 end
@@ -529,10 +543,10 @@ function flip()
 		for _,page in pairs(pages) do
 			page.Frame.Visible = false
 		end
-		
+
 		currentElement.Link.Frame.Visible = true
 		currentPage = currentElement.Link
-		
+
 		selectPosition = 0
 		--selectElement(getElement())
 	end
@@ -595,26 +609,26 @@ end
 function getElementOrder(elm, page)
 	local belowElements = {}
 	local aboveElements = {}
-	
+
 	local y = elm.Frame.Position.Y.Offset
-	
+
 	for k,v in pairs(page.Elements) do
-		
+
 		local vY = v.Frame.Position.Y.Offset	
 		if vY < y then
 			table.insert(aboveElements, v)
 		elseif vY > y then
 			table.insert(belowElements, v)
 		end
-		
+
 	end
-	
+
 	return belowElements,aboveElements
 end
 
 function shiftElementsFrom(elm, page, up)
 	local belowElements, aboveElements = getElementOrder(elm, page)
-	
+
 	if up then
 		for _,v in pairs(belowElements) do
 			v.Frame.Position -= UDim2.new(0,0,0,offset)
@@ -641,9 +655,9 @@ function assertElement(element, page)
 	local elements = page.Elements
 	local elementCount = #elements
 	local backBtn = getElementByName(page, "Back")
-	
+
 	element.Frame.Position = UDim2.new(0,0,0,elementCount*offset)
-	
+
 	if backBtn then
 		element.Frame.Position -= UDim2.new(0,0,0,offset)
 		backBtn.Frame.Position += UDim2.new(0,0,0,offset)
@@ -656,7 +670,7 @@ function page:button(name,callback,link)
 	frame.Label.Text = name
 	frame.Visible = true
 	frame.Parent = self.Frame
-	
+
 	local newElement = {}
 	newElement.Class = "Button"
 	newElement.Selectable = true
@@ -665,12 +679,12 @@ function page:button(name,callback,link)
 	newElement.Parent = self
 	newElement.Callback = callback
 	newElement.Link = link
-	
+
 	bindElement(newElement,uiLibrary.Keybinds.Right, newElement.Callback)
 	bindElement(newElement,uiLibrary.Keybinds.Enter, newElement.Callback)
-	
+
 	assertElement(newElement, self)
-	
+
 	table.insert(self.Elements, newElement)
 	return setmetatable(newElement,element)
 end
@@ -691,13 +705,13 @@ function page:toggle(name,callback,toggled)
 	newElement.Parent = self
 	newElement.Callback = callback
 	newElement.Toggled = toggled or false
-	
+
 	local function update()
 		local state = newElement.Toggled
 		frame.ToggleStatus.Text = state and "On" or "Off"
 		frame.ToggleStatus.TextColor3 = state and Color3.new(0.2, 1, 0.3) or Color3.new(1, 0.25, 0.25)
 	end
-	
+
 	local function change()
 		newElement.Toggled = not newElement.Toggled
 		update()
@@ -705,14 +719,14 @@ function page:toggle(name,callback,toggled)
 			newElement.Callback(newElement.Toggled)
 		end
 	end
-	
+
 	update()
-	
+
 	bindElement(newElement, uiLibrary.Keybinds.Right, change)
 	bindElement(newElement, uiLibrary.Keybinds.Left, change)
-	
+
 	assertElement(newElement, self)
-	
+
 	table.insert(self.Elements, newElement)
 	return setmetatable(newElement,element)
 end
@@ -737,33 +751,61 @@ function page:value(name,callback,startingValue,min,max,increment)
 	newElement.Min = min or -math.huge
 	newElement.Max = max or math.huge
 	newElement.Increment = increment or 1
-	
+
 	local function updateCounter()
 		frame.Counter.Text = string.sub(tostring(newElement.Value),1,5)
 	end
-	
+
 	local function callbackEvent()
 		if newElement.Callback then
 			newElement.Callback(newElement.Value)
 		end
 		updateCounter()
 	end
-	
+
 	local function sub()
 		newElement.Value = math.clamp(newElement.Value - newElement.Increment, newElement.Min, newElement.Max)
 		callbackEvent()
 	end
-	
+
 	local function add()
 		newElement.Value = math.clamp(newElement.Value + newElement.Increment, newElement.Min, newElement.Max)
 		callbackEvent()	
 	end
-	
+
 	bindElement(newElement,uiLibrary.Keybinds.Left,sub)
 	bindElement(newElement,uiLibrary.Keybinds.Right,add)
-	
+
 	assertElement(newElement, self)
+
+	table.insert(self.Elements, newElement)
+	return setmetatable(newElement,element)
+end
+function page:dropdown(name,list,callback)
+	local frame = uiLibrary.Presets.Value:Clone()
+	frame.Name = name
+	frame.Visible = true
+	frame.Parent = self.Frame
+
+	local newElement = {}
+	newElement.Class = "Dropdown"
+	newElement.Name = name
+	newElement.Selectable = true
+	newElement.Name = name
+	newElement.Frame = frame
+	newElement.Parent = self
+	newElement.Callback = callback
 	
+	local function showList()
+		self.Locked = true
+	end
+	local function hideList()
+		self.Locked = false
+	end
+	bindElement(newElement,uiLibrary.Keybinds.Down,showList)
+	bindElement(newElement,uiLibrary.Keybinds.Back,hideList)
+	assertElement(newElement, self)
+
 	table.insert(self.Elements, newElement)
 	return setmetatable(newElement,element)
 end
@@ -771,26 +813,28 @@ end
 --Builders
 function uiLibrary.createPage(name)
 	assert(name, "Invalid Page Name")
-	
+
 	local frame = uiLibrary.Presets.Page:Clone()
 	frame.Name = name
 	frame.Visible = false 
 	frame.Parent = gui.Main.Pages
-	
+
 	local newPage = setmetatable({},page)
+	newPage.Locked = false
 	newPage.Name = name
 	newPage.Frame = frame
 	newPage.Class = "Page"
 	newPage.Elements = {}
-	
+
 	if name ~= "Home" then
 		uiLibrary.Pages.Home:button(name,flip,newPage)
 		newPage:button("Back",back)
 	end
-	
+
 	pages[name] = newPage
 	return newPage
 end
+
 
 --REQUIRED!!! Home page
 local homePage = uiLibrary.createPage("Home")
@@ -825,7 +869,7 @@ spawn(function()
 		if currentPage and currentElement then
 			local main = gui:FindFirstChild("Main")
 			if not gui or not main then break end
-			
+
 			if currentPage.Name == "Home" then
 				main.Footer.BackKeybindDisplay.Visible = false
 				main.TitleFrame.TitleLabel.Text = uiLibrary.MenuName
