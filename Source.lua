@@ -523,7 +523,7 @@ end
 function back()
 	for _,page in pairs(pages) do
 		if page.Locked then
-			break
+			print(page)
 		end
 		local frame = page.Frame
 		if page.Name:lower() == "home" then
@@ -609,7 +609,7 @@ end
 function getElementOrder(elm, page)
 	local belowElements = {}
 	local aboveElements = {}
-
+	
 	local y = elm.Frame.Position.Y.Offset
 
 	for k,v in pairs(page.Elements) do
