@@ -522,9 +522,7 @@ end
 
 function back()
 	for _,page in pairs(pages) do
-		if page.Locked then
-			print(page)
-		end
+		print(page.Locked)
 		local frame = page.Frame
 		if page.Name:lower() == "home" then
 			frame.Visible = true
