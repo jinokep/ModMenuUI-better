@@ -802,7 +802,7 @@ function page:dropdown(name,list,callback)
 	local function hideList()
 		self.Locked = false
 	end
-	bindElement(newElement,uiLibrary.Keybinds.Down,showList)
+	bindElement(newElement,uiLibrary.Keybinds.Enter,showList)
 	bindElement(newElement,uiLibrary.Keybinds.Back,hideList)
 	assertElement(newElement, self)
 
