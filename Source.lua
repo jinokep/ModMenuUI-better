@@ -15,7 +15,7 @@ end
 -----------------------------------------------------------------
 
 local uiLibrary = {}
-uiLibrary.Version=1.6
+uiLibrary.Version=1.8
 uiLibrary.__index = uiLibrary
 uiLibrary.MenuName = "Mod Menu UI"
 uiLibrary.Connections = {}
@@ -862,6 +862,11 @@ function page:dropdown(name,list,callback)
 				frame.List[tostring(i)].TextColor3 = Color3.fromRGB(255, 255, 255)
 			end
 		end
+		if newElement.CurrentlySelected then
+			frame.Label.Text = newElement.CurrentlySelected
+		else
+			frame.Label.Text = "Pick one"
+		end
 	end
 	
 	
@@ -880,7 +885,7 @@ function page:dropdown(name,list,callback)
 			self.Locked = true
 			newElement.ListVisible = true
 		else
-			newElement.CurrentlySelected = newElement.SelectedElement
+			newElement.CurrentlySelected = newElement.List[newElement.SelectedElement]
 			callback(newElement.CurrentlySelected)
 			hideList()
 		end
