@@ -789,7 +789,7 @@ function page:value(name,callback,startingValue,min,max,increment)
 	return setmetatable(newElement,element)
 end
 function page:dropdown(name,list,callback)
-	local frame = uiLibrary.Presets.Dropdown()
+	local frame = uiLibrary.Presets.Dropdown:Clone()
 	frame.Name = name
 	frame.Visible = true
 	frame.Parent = self.Frame
