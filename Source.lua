@@ -15,7 +15,7 @@ end
 -----------------------------------------------------------------
 
 local uiLibrary = {}
-uiLibrary.Version=1.8
+uiLibrary.Version=1.9
 uiLibrary.__index = uiLibrary
 uiLibrary.MenuName = "Mod Menu UI"
 uiLibrary.Connections = {}
@@ -885,10 +885,11 @@ function page:dropdown(name,list,callback)
 			self.Locked = true
 			newElement.ListVisible = true
 		else
+			print(list,newElement.CurrentlySelected,newElement.SelectedElement)
 			newElement.CurrentlySelected = newElement.List[newElement.SelectedElement]
 			callback(newElement.CurrentlySelected)
 			hideList()
-		end
+		end	
 
 	end
 	local function scrollList(up)
