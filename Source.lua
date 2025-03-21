@@ -422,6 +422,7 @@ function dropdownPreset()
 		Index.Name=tostring(i)
 		Index.Size = UDim2.new(1,0,0.33,0)
 		Index.Position = UDim2.new(0,0,0.33*(i-1),0)
+		Index.Parent = List
 	end
 	
 	List.Visible= false	
@@ -827,12 +828,16 @@ function page:dropdown(name,list,callback)
 	newElement.Callback = callback
 	
 	local function showList()
+		print("heh")
 		frame.List.Visible = true
 		self.Locked = true
 	end
 	local function hideList()
-		frame.List.Visible = false
-		self.Locked = false
+		if self.Locked then
+			frame.List.Visible = false
+			self.Locked = false
+		end
+
 	end
 	bindElement(newElement,uiLibrary.Keybinds.Enter,showList)
 	bindElement(newElement,uiLibrary.Keybinds.Back,hideList)
