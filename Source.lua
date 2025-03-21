@@ -836,6 +836,7 @@ function page:dropdown(name,list,callback)
 	newElement.List = list
 	newElement.ListVisible = false
 	newElement.SelectedElement = 1
+	newElement.CurrentlySelected = nil
 	local StartingIndex = 1
 	local WindowSize = 3
 	local function updateList()
@@ -864,19 +865,24 @@ function page:dropdown(name,list,callback)
 	end
 	
 	
-	local function showList()
-		if not newElement.ListVisible then
-			frame.List.Visible = true
-			self.Locked = true
-			newElement.ListVisible = true
-		end
 
-	end
 	local function hideList()
 		if newElement.ListVisible then
 			frame.List.Visible = false
 			self.Locked = false
 			newElement.ListVisible = false
+		end
+
+	end
+	local function showList()
+		if not newElement.ListVisible then
+			frame.List.Visible = true
+			self.Locked = true
+			newElement.ListVisible = true
+		else
+			newElement.CurrentlySelected = newElement.SelectedElement
+			callback(newElement.CurrentlySelected)
+			hideList()
 		end
 
 	end
@@ -900,7 +906,7 @@ function page:dropdown(name,list,callback)
 			updateList()
 		end
 	end
-
+	
 	bindElement(newElement,uiLibrary.Keybinds.Down,scrollList)
 	bindElement(newElement, uiLibrary.Keybinds.Up, function()
 		scrollList(true)
@@ -910,6 +916,8 @@ function page:dropdown(name,list,callback)
 	bindElement(newElement,uiLibrary.Keybinds.Back,hideList)
 	
 	assertElement(newElement, self)
+	
+	updateList()
 
 	table.insert(self.Elements, newElement)
 	return setmetatable(newElement,element)
