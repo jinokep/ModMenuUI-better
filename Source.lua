@@ -800,7 +800,6 @@ function page:dropdown(name,list,callback)
 	newElement.Callback = callback
 	
 	local function showList()
-		fram
 		self.Locked = true
 	end
 	local function hideList()
