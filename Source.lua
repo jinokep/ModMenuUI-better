@@ -15,6 +15,9 @@ end
 -----------------------------------------------------------------
 
 local uiLibrary = {}
+uiLibrary.Version=2.3
+uiLibrary.heldCooldown = 0.1
+uiLibrary.canHeld=true
 uiLibrary.__index = uiLibrary
 uiLibrary.MenuName = "Mod Menu UI"
 uiLibrary.Connections = {}
@@ -24,7 +27,7 @@ uiLibrary.Gui = nil
 uiLibrary.Keybinds = {
 	Up = Enum.KeyCode.Up,
 	Down = Enum.KeyCode.Down,
-	Left = Enum.KeyCode.LeftBracket,
+	Left = Enum.KeyCode.LeftBracket, 
 	Right = Enum.KeyCode.RightBracket,
 	Enter = Enum.KeyCode.KeypadEnter,
 	Back = Enum.KeyCode.Backspace,
@@ -184,7 +187,7 @@ function makeGui()
 	ArrowLabel.Size = UDim2.new(0, 30, 1, 0)
 	ArrowLabel.Image = "rbxassetid://13049153962"
 	ArrowLabel.ScaleType = Enum.ScaleType.Fit
-	
+
 	OptionCounter.Name = "OptionCounter"
 	OptionCounter.Parent = Footer
 	OptionCounter.AnchorPoint = Vector2.new(1, 0)
@@ -197,7 +200,7 @@ function makeGui()
 	OptionCounter.Text = "1/1"
 	OptionCounter.TextColor3 = Color3.fromRGB(255, 255, 255)
 	OptionCounter.TextSize = 14.000
-	
+
 	BackKeybindDisplay.Name = "BackKeybindDisplay"
 	BackKeybindDisplay.Parent = Footer
 	BackKeybindDisplay.AnchorPoint = Vector2.new(0, 0)
@@ -221,7 +224,7 @@ function makeGui()
 	Pages.ClipsDescendants = true
 	Pages.Position = UDim2.new(0, 0, 0, 45)
 	Pages.Size = UDim2.new(1, 0, 1, -70)
-	
+
 	return ModMenuUI	
 end
 
@@ -391,7 +394,51 @@ function pagePreset()
 
 	return PagePreset
 end
+function dropdownPreset()
+	local DropdownPreset = Instance.new("Frame")
 
+	DropdownPreset.Name = "Dropdown"
+	DropdownPreset.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	DropdownPreset.BackgroundTransparency = 1
+	DropdownPreset.BorderSizePixel = 0
+	DropdownPreset.Size = UDim2.new(1, 0, 0, 20)
+	
+	local Label = Instance.new("TextLabel")
+	Label.Name = "Label"
+	Label.Size = UDim2.new(1,0,1,0)
+	Label.BackgroundTransparency = 1
+	Label.TextSize = 14
+	Label.Text = "Pick One"
+	Label.TextColor3 = Color3.fromRGB(255,255,255)
+	Label.TextWrapped = true
+	Label.TextXAlignment = uiLibrary.GenvSettings.ModMenuTextAlign
+	Label.Parent = DropdownPreset
+	
+	local List = Instance.new("Frame")
+	List.Name = "List"
+	List.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	List.Size = UDim2.new(1,0,3,0)
+	List.Position = UDim2.new(0,0,1,0)
+	List.Visible = false
+	List.Parent = DropdownPreset
+	
+	
+	for i = 1,3 do
+		local Index = Instance.new("TextLabel")
+		Index.Name=tostring(i)
+		Index.Size = UDim2.new(1,0,0.33,0)
+		Index.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Index.TextWrapped = true
+		Index.TextXAlignment = uiLibrary.GenvSettings.ModMenuTextAlign
+		Index.TextSize = 14
+		Index.Text = ""
+		Index.Position = UDim2.new(0,0,0.33*(i-1),0)
+		Index.Parent = List
+	end
+	
+	return DropdownPreset
+	
+end
 -----------------------------------------------------------------
 
 --Load Presets
@@ -399,6 +446,7 @@ uiLibrary.Presets.Button = buttonPreset()
 uiLibrary.Presets.Toggle = togglePreset()
 uiLibrary.Presets.Value = valuePreset()
 uiLibrary.Presets.Page = pagePreset()
+uiLibrary.Presets.Dropdown = dropdownPreset()
 
 --Shortcuts
 local presets = uiLibrary.Presets
@@ -440,7 +488,7 @@ end
 
 function uiLibrary.toggle(v)
 	local toggleState = v or not gui.Enabled
-	
+
 	if toggleState then
 		uis.MouseBehavior = Enum.MouseBehavior.LockCurrentPosition
 		gui.Enabled = true
@@ -448,7 +496,7 @@ function uiLibrary.toggle(v)
 		uis.MouseBehavior = Enum.MouseBehavior.Default
 		gui.Enabled = false
 	end
-	
+
 	--selectElement(getElement())
 end
 
@@ -488,7 +536,7 @@ function selectElement(element)
 		frame.Label.TextColor3 = Color3.new(0,0,0)
 		selectPosition = frame.Position.Y.Offset
 		currentElement = element
-		
+
 		if frame:FindFirstChild("Counter") then
 			frame.Counter.ArrowLeft.ImageColor3 = Color3.new(0,0,0)
 			frame.Counter.ArrowRight.ImageColor3 = Color3.new(0,0,0)
@@ -499,6 +547,9 @@ end
 
 function scroll(up)
 	if currentPage then
+		if currentPage.Locked then
+			return
+		end
 		local newPos = selectPosition + (up and -offset or offset)
 		for _,elm in pairs(currentPage.Elements) do
 			if elm.Frame.Position.Y.Offset == newPos then
@@ -510,6 +561,9 @@ function scroll(up)
 end
 
 function back()
+	if currentPage.Locked then
+		return
+	end
 	for _,page in pairs(pages) do
 		local frame = page.Frame
 		if page.Name:lower() == "home" then
@@ -519,7 +573,7 @@ function back()
 			frame.Visible = false
 		end
 	end
-	
+
 	selectPosition = 0
 	selectElement(getElement())
 end
@@ -529,21 +583,29 @@ function flip()
 		for _,page in pairs(pages) do
 			page.Frame.Visible = false
 		end
-		
+
 		currentElement.Link.Frame.Visible = true
 		currentPage = currentElement.Link
-		
+
 		selectPosition = 0
 		--selectElement(getElement())
 	end
 end
 
 local keyCalls = {}
+local keyCallsHeld = {}
 function keyPressed(key, callback, condition)
 	table.insert(keyCalls, {key, callback, condition})
 end
-
-function bindElement(elm,key,callback)
+function keyHeld(key, callback, condition)
+	table.insert(keyCallsHeld, {key, callback, condition})
+end
+function bindElement(elm,key,callback,held)
+	if held then
+		keyHeld(key, callback, function()
+			return (currentElement and currentElement.Frame == elm.Frame)
+		end)
+	end
 	keyPressed(key, callback, function()
 		return (currentElement and currentElement.Frame == elm.Frame)
 	end)
@@ -564,13 +626,45 @@ function checkKeyPressed(input,isTyping)
 				else
 					callback()
 				end
+				if uiLibrary.canHeld then
+					uiLibrary.canHeld=false
+					task.delay(0.4,function()
+						uiLibrary.canHeld=true
+					end)
+				end
+
 			end
+			
 		end
 	end
 end
 
------------------------------------------------------------------
 
+function checkKeyHeld(dt)
+	for index,info in pairs(keyCallsHeld) do
+		local key = info[1]
+		local callback = info[2]
+		local condition = info[3]
+		if uis:IsKeyDown(key) then
+			if uiLibrary.canHeld then
+				if callback then
+					uiLibrary.canHeld = false
+					if condition then
+						if condition() then
+							callback()
+						end
+					else
+						callback()
+					end
+					task.delay(0.1,function()
+						uiLibrary.canHeld = true
+					end)
+				end
+			end
+		end
+	end
+end
+-----------------------------------------------------------------
 --Page Constructors
 
 local page = {}
@@ -597,24 +691,24 @@ function getElementOrder(elm, page)
 	local aboveElements = {}
 	
 	local y = elm.Frame.Position.Y.Offset
-	
+
 	for k,v in pairs(page.Elements) do
-		
+
 		local vY = v.Frame.Position.Y.Offset	
 		if vY < y then
 			table.insert(aboveElements, v)
 		elseif vY > y then
 			table.insert(belowElements, v)
 		end
-		
+
 	end
-	
+
 	return belowElements,aboveElements
 end
 
 function shiftElementsFrom(elm, page, up)
 	local belowElements, aboveElements = getElementOrder(elm, page)
-	
+
 	if up then
 		for _,v in pairs(belowElements) do
 			v.Frame.Position -= UDim2.new(0,0,0,offset)
@@ -641,9 +735,9 @@ function assertElement(element, page)
 	local elements = page.Elements
 	local elementCount = #elements
 	local backBtn = getElementByName(page, "Back")
-	
+
 	element.Frame.Position = UDim2.new(0,0,0,elementCount*offset)
-	
+
 	if backBtn then
 		element.Frame.Position -= UDim2.new(0,0,0,offset)
 		backBtn.Frame.Position += UDim2.new(0,0,0,offset)
@@ -656,7 +750,7 @@ function page:button(name,callback,link)
 	frame.Label.Text = name
 	frame.Visible = true
 	frame.Parent = self.Frame
-	
+
 	local newElement = {}
 	newElement.Class = "Button"
 	newElement.Selectable = true
@@ -665,12 +759,12 @@ function page:button(name,callback,link)
 	newElement.Parent = self
 	newElement.Callback = callback
 	newElement.Link = link
-	
+
 	bindElement(newElement,uiLibrary.Keybinds.Right, newElement.Callback)
 	bindElement(newElement,uiLibrary.Keybinds.Enter, newElement.Callback)
-	
+
 	assertElement(newElement, self)
-	
+
 	table.insert(self.Elements, newElement)
 	return setmetatable(newElement,element)
 end
@@ -691,13 +785,13 @@ function page:toggle(name,callback,toggled)
 	newElement.Parent = self
 	newElement.Callback = callback
 	newElement.Toggled = toggled or false
-	
+
 	local function update()
 		local state = newElement.Toggled
 		frame.ToggleStatus.Text = state and "On" or "Off"
 		frame.ToggleStatus.TextColor3 = state and Color3.new(0.2, 1, 0.3) or Color3.new(1, 0.25, 0.25)
 	end
-	
+
 	local function change()
 		newElement.Toggled = not newElement.Toggled
 		update()
@@ -705,14 +799,14 @@ function page:toggle(name,callback,toggled)
 			newElement.Callback(newElement.Toggled)
 		end
 	end
-	
+
 	update()
-	
+
 	bindElement(newElement, uiLibrary.Keybinds.Right, change)
 	bindElement(newElement, uiLibrary.Keybinds.Left, change)
-	
+
 	assertElement(newElement, self)
-	
+
 	table.insert(self.Elements, newElement)
 	return setmetatable(newElement,element)
 end
@@ -737,33 +831,142 @@ function page:value(name,callback,startingValue,min,max,increment)
 	newElement.Min = min or -math.huge
 	newElement.Max = max or math.huge
 	newElement.Increment = increment or 1
-	
+
 	local function updateCounter()
 		frame.Counter.Text = string.sub(tostring(newElement.Value),1,5)
 	end
-	
+
 	local function callbackEvent()
 		if newElement.Callback then
 			newElement.Callback(newElement.Value)
 		end
 		updateCounter()
 	end
-	
+
 	local function sub()
 		newElement.Value = math.clamp(newElement.Value - newElement.Increment, newElement.Min, newElement.Max)
 		callbackEvent()
 	end
-	
+
 	local function add()
 		newElement.Value = math.clamp(newElement.Value + newElement.Increment, newElement.Min, newElement.Max)
 		callbackEvent()	
 	end
+
+	bindElement(newElement,uiLibrary.Keybinds.Left,sub,true)
+	bindElement(newElement,uiLibrary.Keybinds.Right,add,true)
+
+	assertElement(newElement, self)
+
+	table.insert(self.Elements, newElement)
+	return setmetatable(newElement,element)
+end
+function page:dropdown(name,list,defaultIndex,callback)
+	local frame = uiLibrary.Presets.Dropdown:Clone()
+	frame.Name = name
+	frame.Visible = true
+	frame.Parent = self.Frame
+
+	local newElement = {}
+	newElement.Class = "Dropdown"
+	newElement.Name = name
+	newElement.Selectable = true
+	newElement.Name = name
+	newElement.Frame = frame
+	newElement.Parent = self
+	newElement.Callback = callback
+	newElement.List = list
+	newElement.ListVisible = false
+	newElement.SelectedElement = defaultIndex or 1
+	local CurrentlySelected = nil
+	local StartingIndex = 1
+	local WindowSize = 3
+	local function updateList()
+		local firstIndex = newElement.List[StartingIndex]
+		local secondIndex = newElement.List[StartingIndex+1] 
+		local thirdIndex = newElement.List[StartingIndex+2]
+		
+		local selectedIndex = (newElement.SelectedElement+1) - StartingIndex
+		
+		
+		for i = 1,3 do
+			local item = newElement.List[StartingIndex+(i-1)]
+			if item then
+				frame.List[tostring(i)].Text = item
+			else
+				frame.List[tostring(i)].Text = "Empty"
+			end
+			if selectedIndex == i then
+				frame.List[tostring(i)].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				frame.List[tostring(i)].TextColor3 = Color3.fromRGB(0, 0, 0)
+			else
+				frame.List[tostring(i)].BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+				frame.List[tostring(i)].TextColor3 = Color3.fromRGB(255, 255, 255)
+			end
+		end
+	end
+	local function update()
+		if CurrentlySelected then
+			frame.Label.Text = CurrentlySelected
+		else
+			frame.Label.Text = "Pick one"
+		end
+		frame.List.Visible = newElement.ListVisible
+		updateList()
+	end
 	
-	bindElement(newElement,uiLibrary.Keybinds.Left,sub)
-	bindElement(newElement,uiLibrary.Keybinds.Right,add)
+
+	local function hideList()
+		if newElement.ListVisible then
+			self.Locked = false
+			newElement.ListVisible = false
+		end
+		update()
+	end
+	local function showList()
+		if not newElement.ListVisible then
+			self.Locked = true
+			newElement.ListVisible = true
+		else
+			CurrentlySelected = newElement.List[newElement.SelectedElement]
+			callback(newElement.List[newElement.SelectedElement])
+			hideList()
+		end	
+		update()
+	end
+	local function scrollList(up)
+		if newElement.ListVisible then
+			if up then
+				if newElement.SelectedElement > 1 then
+					newElement.SelectedElement -= 1
+					if newElement.SelectedElement < StartingIndex then
+						StartingIndex -= WindowSize
+					end
+				end
+			else
+				if newElement.SelectedElement < #newElement.List then
+					newElement.SelectedElement += 1
+					if newElement.SelectedElement > (StartingIndex-1)+WindowSize then
+						StartingIndex=newElement.SelectedElement
+					end
+				end
+			end
+			update()
+		end
+	end
+	
+	bindElement(newElement,uiLibrary.Keybinds.Down,scrollList)
+	bindElement(newElement, uiLibrary.Keybinds.Up, function()
+		scrollList(true)
+	end)
+	bindElement(newElement,uiLibrary.Keybinds.Right,showList)
+	bindElement(newElement,uiLibrary.Keybinds.Enter,showList)
+	bindElement(newElement,uiLibrary.Keybinds.Back,hideList)
 	
 	assertElement(newElement, self)
 	
+	updateList()
+
 	table.insert(self.Elements, newElement)
 	return setmetatable(newElement,element)
 end
@@ -771,26 +974,28 @@ end
 --Builders
 function uiLibrary.createPage(name)
 	assert(name, "Invalid Page Name")
-	
+
 	local frame = uiLibrary.Presets.Page:Clone()
 	frame.Name = name
 	frame.Visible = false 
 	frame.Parent = gui.Main.Pages
-	
+
 	local newPage = setmetatable({},page)
+	newPage.Locked = false
 	newPage.Name = name
 	newPage.Frame = frame
 	newPage.Class = "Page"
 	newPage.Elements = {}
-	
+
 	if name ~= "Home" then
 		uiLibrary.Pages.Home:button(name,flip,newPage)
 		newPage:button("Back",back)
 	end
-	
+
 	pages[name] = newPage
 	return newPage
 end
+
 
 --REQUIRED!!! Home page
 local homePage = uiLibrary.createPage("Home")
@@ -799,6 +1004,8 @@ currentPage = homePage
 
 --Connections
 janitor(uis.InputBegan:Connect(checkKeyPressed))
+
+janitor(game["Run Service"].RenderStepped:Connect(checkKeyHeld))
 
 --Traversing the GUI
 keyPressed(uiLibrary.Keybinds.Toggle, uiLibrary.toggle)
@@ -809,9 +1016,6 @@ end)
 keyPressed(uiLibrary.Keybinds.Down, scroll)
 
 --Finalize GUI
-if syn then
-	syn.protect_gui(gui)
-end
 gui.Enabled = true
 gui.Parent = game.CoreGui
 
@@ -825,7 +1029,7 @@ spawn(function()
 		if currentPage and currentElement then
 			local main = gui:FindFirstChild("Main")
 			if not gui or not main then break end
-			
+
 			if currentPage.Name == "Home" then
 				main.Footer.BackKeybindDisplay.Visible = false
 				main.TitleFrame.TitleLabel.Text = uiLibrary.MenuName
