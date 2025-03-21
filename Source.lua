@@ -857,9 +857,6 @@ end)
 keyPressed(uiLibrary.Keybinds.Down, scroll)
 
 --Finalize GUI
-if syn then
-	syn.protect_gui(gui)
-end
 gui.Enabled = true
 gui.Parent = game.CoreGui
 
