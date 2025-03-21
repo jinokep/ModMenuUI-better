@@ -839,8 +839,11 @@ function page:dropdown(name,list,callback)
 		end
 
 	end
+	
+	bindElement(newElement, uiLibrary.Keybinds.Right, showList())
 	bindElement(newElement,uiLibrary.Keybinds.Enter,showList)
 	bindElement(newElement,uiLibrary.Keybinds.Back,hideList)
+	
 	assertElement(newElement, self)
 
 	table.insert(self.Elements, newElement)
