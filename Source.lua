@@ -402,10 +402,11 @@ function dropdownPreset()
 	
 	local Label = Instance.new("TextLabel")
 	Label.Name = "Label"
+	Label.Size = UDim2.new(1,0,1,0)
 	Label.BackgroundTransparency = 1
-	Label.TextSize = ""
+	Label.TextSize = 14
 	Label.Text = "Pick One"
-	Label.TextColor = Color3.fromRGB(255,255,255)
+	Label.TextColor3 = Color3.fromRGB(255,255,255)
 	Label.Parent = DropdownPreset
 	
 	local List = Instance.new("ScrollingFrame")
@@ -525,6 +526,9 @@ end
 
 function scroll(up)
 	if currentPage then
+		if currentPage.Locked then
+			return
+		end
 		local newPos = selectPosition + (up and -offset or offset)
 		for _,elm in pairs(currentPage.Elements) do
 			if elm.Frame.Position.Y.Offset == newPos then
