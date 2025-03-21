@@ -409,9 +409,20 @@ function dropdownPreset()
 	Label.TextColor3 = Color3.fromRGB(255,255,255)
 	Label.Parent = DropdownPreset
 	
-	local List = Instance.new("ScrollingFrame")
-	List.Size = UDim2.new(1,0,1,0)
+	local List = Instance.new("Frame")
+	List.Name = "List"
+	List.Size = UDim2.new(1,0,3,0)
+	List.Position = UDim2.new(0,0,1,0)
+	List.Visible = false
 	List.Parent = DropdownPreset
+	
+	
+	for i = 1,3 do
+		local Index = Instance.new("TextLabel")
+		Index.Name=tostring(i)
+		Index.Size = UDim2.new(1,0,0.33,0)
+		Index.Position = UDim2.new(0,0,0.33*(i-1),0)
+	end
 	
 	List.Visible= false	
 	
