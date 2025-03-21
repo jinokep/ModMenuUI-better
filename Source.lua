@@ -15,7 +15,7 @@ end
 -----------------------------------------------------------------
 
 local uiLibrary = {}
-uiLibrary.Version=1.9
+uiLibrary.Version=2
 uiLibrary.__index = uiLibrary
 uiLibrary.MenuName = "Mod Menu UI"
 uiLibrary.Connections = {}
@@ -25,7 +25,7 @@ uiLibrary.Gui = nil
 uiLibrary.Keybinds = {
 	Up = Enum.KeyCode.Up,
 	Down = Enum.KeyCode.Down,
-	Left = Enum.KeyCode.LeftBracket,
+	Left = Enum.KeyCode.LeftBracket, 
 	Right = Enum.KeyCode.RightBracket,
 	Enter = Enum.KeyCode.KeypadEnter,
 	Back = Enum.KeyCode.Backspace,
@@ -819,7 +819,7 @@ function page:value(name,callback,startingValue,min,max,increment)
 	table.insert(self.Elements, newElement)
 	return setmetatable(newElement,element)
 end
-function page:dropdown(name,list,callback)
+function page:dropdown(name,list,defaultIndex,callback)
 	local frame = uiLibrary.Presets.Dropdown:Clone()
 	frame.Name = name
 	frame.Visible = true
@@ -835,7 +835,7 @@ function page:dropdown(name,list,callback)
 	newElement.Callback = callback
 	newElement.List = list
 	newElement.ListVisible = false
-	newElement.SelectedElement = 1
+	newElement.SelectedElement = defaultIndex or 1
 	newElement.CurrentlySelected = nil
 	local StartingIndex = 1
 	local WindowSize = 3
@@ -862,35 +862,35 @@ function page:dropdown(name,list,callback)
 				frame.List[tostring(i)].TextColor3 = Color3.fromRGB(255, 255, 255)
 			end
 		end
-		if newElement.CurrentlySelected then
-			frame.Label.Text = newElement.CurrentlySelected
+	end
+	local function update()
+		if newElement.List[newElement.SelectedElement] then
+			frame.Label.Text = newElement.List[newElement.SelectedElement]
 		else
 			frame.Label.Text = "Pick one"
 		end
+		frame.List.Visible = newElement.ListVisible
+		updateList()
 	end
-	
 	
 
 	local function hideList()
 		if newElement.ListVisible then
-			frame.List.Visible = false
 			self.Locked = false
 			newElement.ListVisible = false
 		end
-
+		update()
 	end
 	local function showList()
 		if not newElement.ListVisible then
-			frame.List.Visible = true
 			self.Locked = true
 			newElement.ListVisible = true
 		else
-			print(list,newElement.CurrentlySelected,newElement.SelectedElement)
 			newElement.CurrentlySelected = newElement.List[newElement.SelectedElement]
-			callback(newElement.CurrentlySelected)
+			callback(newElement.List[newElement.SelectedElement])
 			hideList()
 		end	
-
+		update()
 	end
 	local function scrollList(up)
 		if newElement.ListVisible then
@@ -909,7 +909,7 @@ function page:dropdown(name,list,callback)
 					end
 				end
 			end
-			updateList()
+			update()
 		end
 	end
 	
