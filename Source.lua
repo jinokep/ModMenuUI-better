@@ -15,7 +15,7 @@ end
 -----------------------------------------------------------------
 
 local uiLibrary = {}
-uiLibrary.Version=1.3
+uiLibrary.Version=1.4
 uiLibrary.__index = uiLibrary
 uiLibrary.MenuName = "Mod Menu UI"
 uiLibrary.Connections = {}
@@ -895,6 +895,7 @@ function page:dropdown(name,list,callback)
 	bindElement(newElement, uiLibrary.Keybinds.Up, function()
 		scrollList(true)
 	end)
+	bindElement(newElement,uiLibrary.Keybinds.Right,showList)
 	bindElement(newElement,uiLibrary.Keybinds.Enter,showList)
 	bindElement(newElement,uiLibrary.Keybinds.Back,hideList)
 	
