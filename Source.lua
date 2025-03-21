@@ -15,7 +15,7 @@ end
 -----------------------------------------------------------------
 
 local uiLibrary = {}
-uiLibrary.Version=2.1
+uiLibrary.Version=2.2
 uiLibrary.__index = uiLibrary
 uiLibrary.MenuName = "Mod Menu UI"
 uiLibrary.Connections = {}
@@ -864,8 +864,8 @@ function page:dropdown(name,list,defaultIndex,callback)
 		end
 	end
 	local function update()
-		if newElement.List[newElement.SelectedElement] then
-			frame.Label.Text = newElement.List[newElement.SelectedElement]
+		if newElement.CurrentlySelected then
+			frame.Label.Text = newElement.CurrentlySelected
 		else
 			frame.Label.Text = "Pick one"
 		end
