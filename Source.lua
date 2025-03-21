@@ -845,14 +845,21 @@ function page:dropdown(name,list,callback)
 		
 		local selectedIndex = (newElement.SelectedElement+1) - StartingIndex
 		
-		if firstIndex then
-			frame.List["1"].Text = firstIndex
-		end
-		if secondIndex then
-			frame.List["2"].Text = secondIndex
-		end
-		if thirdIndex then
-			frame.List["3"].Text = thirdIndex
+		
+		for i = 1,3 do
+			local item = newElement.List[StartingIndex+(i-1)]
+			if item then
+				frame.List[tostring(i)].Text = item
+			else
+				frame.List[tostring(i)].Text = "Empty"
+			end
+			if selectedIndex == i then
+				frame.List[tostring(i)].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				frame.List[tostring(i)].TextColor3 = Color3.fromRGB(0, 0, 0)
+			else
+				frame.List[tostring(i)].BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+				frame.List[tostring(i)].TextColor3 = Color3.fromRGB(255, 255, 255)
+			end
 		end
 	end
 	
