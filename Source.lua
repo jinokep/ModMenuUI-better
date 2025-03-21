@@ -15,7 +15,7 @@ end
 -----------------------------------------------------------------
 
 local uiLibrary = {}
-uiLibrary.Version=1.2
+uiLibrary.Version=1.3
 uiLibrary.__index = uiLibrary
 uiLibrary.MenuName = "Mod Menu UI"
 uiLibrary.Connections = {}
@@ -408,10 +408,13 @@ function dropdownPreset()
 	Label.TextSize = 14
 	Label.Text = "Pick One"
 	Label.TextColor3 = Color3.fromRGB(255,255,255)
+	Label.TextWrapped = true
+	Label.TextXAlignment = uiLibrary.GenvSettings.ModMenuTextAlign
 	Label.Parent = DropdownPreset
 	
 	local List = Instance.new("Frame")
 	List.Name = "List"
+	List.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 	List.Size = UDim2.new(1,0,3,0)
 	List.Position = UDim2.new(0,0,1,0)
 	List.Visible = false
@@ -422,6 +425,11 @@ function dropdownPreset()
 		local Index = Instance.new("TextLabel")
 		Index.Name=tostring(i)
 		Index.Size = UDim2.new(1,0,0.33,0)
+		Index.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Index.TextWrapped = true
+		Index.TextXAlignment = uiLibrary.GenvSettings.ModMenuTextAlign
+		Index.TextSize = 14
+		Index.Text = ""
 		Index.Position = UDim2.new(0,0,0.33*(i-1),0)
 		Index.Parent = List
 	end
@@ -825,21 +833,68 @@ function page:dropdown(name,list,callback)
 	newElement.Frame = frame
 	newElement.Parent = self
 	newElement.Callback = callback
+	newElement.List = list
+	newElement.ListVisible = false
+	newElement.SelectedElement = 1
+	local StartingIndex = 1
+	local WindowSize = 3
+	local function updateList()
+		local firstIndex = newElement.List[StartingIndex]
+		local secondIndex = newElement.List[StartingIndex+1] 
+		local thirdIndex = newElement.List[StartingIndex+2]
+		if firstIndex then
+			frame.List["1"].Text = firstIndex
+		end
+		if secondIndex then
+			frame.List["2"].Text = secondIndex
+		end
+		if thirdIndex then
+			frame.List["3"].Text = thirdIndex
+		end
+	end
+	
 	
 	local function showList()
-		print("heh")
-		frame.List.Visible = true
-		self.Locked = true
-	end
-	local function hideList()
-		if self.Locked then
-			frame.List.Visible = false
-			self.Locked = false
+		if not newElement.ListVisible then
+			frame.List.Visible = true
+			self.Locked = true
+			newElement.ListVisible = true
 		end
 
 	end
-	
-	bindElement(newElement, uiLibrary.Keybinds.Right, showList)
+	local function hideList()
+		if newElement.ListVisible then
+			frame.List.Visible = false
+			self.Locked = false
+			newElement.ListVisible = false
+		end
+
+	end
+	local function scrollList(up)
+		if newElement.ListVisible then
+			if up then
+				if newElement.SelectedElement > 1 then
+					newElement.SelectedElement -= 1
+					if newElement.SelectedElement < StartingIndex then
+						StartingIndex -= 1
+					end
+				end
+			else
+				if newElement.SelectedElement < #newElement.List then
+					newElement.SelectedElement += 1
+					if newElement.SelectedElement > (StartingIndex-1)+WindowSize then
+						StartingIndex=newElement.SelectedElement
+					end
+				end
+			end
+			updateList()
+		end
+	end
+
+	bindElement(newElement,uiLibrary.Keybinds.Down,scrollList)
+	bindElement(newElement, uiLibrary.Keybinds.Up, function()
+		scrollList(true)
+	end)
 	bindElement(newElement,uiLibrary.Keybinds.Enter,showList)
 	bindElement(newElement,uiLibrary.Keybinds.Back,hideList)
 	
