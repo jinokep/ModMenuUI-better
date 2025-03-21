@@ -842,6 +842,9 @@ function page:dropdown(name,list,callback)
 		local firstIndex = newElement.List[StartingIndex]
 		local secondIndex = newElement.List[StartingIndex+1] 
 		local thirdIndex = newElement.List[StartingIndex+2]
+		
+		local selectedIndex = (newElement.SelectedElement+1) - StartingIndex
+		
 		if firstIndex then
 			frame.List["1"].Text = firstIndex
 		end
@@ -876,7 +879,7 @@ function page:dropdown(name,list,callback)
 				if newElement.SelectedElement > 1 then
 					newElement.SelectedElement -= 1
 					if newElement.SelectedElement < StartingIndex then
-						StartingIndex -= 1
+						StartingIndex -= WindowSize
 					end
 				end
 			else
