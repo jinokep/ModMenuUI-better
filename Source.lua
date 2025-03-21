@@ -392,21 +392,30 @@ function pagePreset()
 	return PagePreset
 end
 function dropdownPreset()
-	local Dropdown = Instance.new("Frame")
+	local DropdownPreset = Instance.new("Frame")
 
-	Dropdown.Name = "Dropdown"
-	Dropdown.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	Dropdown.BackgroundTransparency = 1
-	Dropdown.BorderSizePixel = 0
-	Dropdown.Size = UDim2.new(1, 0, 0, 20)
+	DropdownPreset.Name = "Dropdown"
+	DropdownPreset.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	DropdownPreset.BackgroundTransparency = 1
+	DropdownPreset.BorderSizePixel = 0
+	DropdownPreset.Size = UDim2.new(1, 0, 0, 20)
+	
+	local Label = Instance.new("TextLabel")
+	Label.Name = "Label"
+	Label.Size = UDim.new(1,0,1,0)
+	Label.BackgroundTransparency = 1.000
+	Label.TextSize = ""
+	Label.Text = "Pick One"
+	Label.TextColor = Color3.fromRGB(255,255,255)
+	
 	
 	local List = Instance.new("ScrollingFrame")
 	List.Size = UDim2.new(1,0,1,0)
-	List.Parent = Dropdown
+	List.Parent = DropdownPreset
 	
 	List.Visible= false	
 	
-	return Dropdown
+	return DropdownPreset
 	
 end
 -----------------------------------------------------------------
