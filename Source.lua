@@ -15,7 +15,7 @@ end
 -----------------------------------------------------------------
 
 local uiLibrary = {}
-uiLibrary.Version=1.1
+uiLibrary.Version=1.2
 uiLibrary.__index = uiLibrary
 uiLibrary.MenuName = "Mod Menu UI"
 uiLibrary.Connections = {}
