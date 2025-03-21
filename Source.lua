@@ -402,7 +402,6 @@ function dropdownPreset()
 	
 	local Label = Instance.new("TextLabel")
 	Label.Name = "Label"
-	Label.Size = UDim2.new(1,0,1,0)
 	Label.BackgroundTransparency = 1
 	Label.TextSize = ""
 	Label.Text = "Pick One"
