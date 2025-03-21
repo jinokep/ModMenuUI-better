@@ -404,6 +404,10 @@ function dropdownPreset()
 	List.Size = UDim2.new(1,0,1,0)
 	List.Parent = Dropdown
 	
+	List.Visible= false	
+	
+	return Dropdown
+	
 end
 -----------------------------------------------------------------
 
@@ -785,7 +789,7 @@ function page:value(name,callback,startingValue,min,max,increment)
 	return setmetatable(newElement,element)
 end
 function page:dropdown(name,list,callback)
-	local frame = uiLibrary.Presets.Dropdown:Clone()
+	local frame = uiLibrary.Presets.Dropdown()
 	frame.Name = name
 	frame.Visible = true
 	frame.Parent = self.Frame
@@ -800,9 +804,11 @@ function page:dropdown(name,list,callback)
 	newElement.Callback = callback
 	
 	local function showList()
+		frame.List.Visible = true
 		self.Locked = true
 	end
 	local function hideList()
+		frame.List.Visible = false
 		self.Locked = false
 	end
 	bindElement(newElement,uiLibrary.Keybinds.Enter,showList)
