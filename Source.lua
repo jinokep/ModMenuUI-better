@@ -407,7 +407,7 @@ function dropdownPreset()
 	Label.TextSize = ""
 	Label.Text = "Pick One"
 	Label.TextColor = Color3.fromRGB(255,255,255)
-	
+	Label.Parent = DropdownPreset
 	
 	local List = Instance.new("ScrollingFrame")
 	List.Size = UDim2.new(1,0,1,0)
