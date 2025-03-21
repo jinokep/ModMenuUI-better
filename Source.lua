@@ -426,8 +426,6 @@ function dropdownPreset()
 		Index.Parent = List
 	end
 	
-	List.Visible= false	
-	
 	return DropdownPreset
 	
 end
@@ -841,7 +839,7 @@ function page:dropdown(name,list,callback)
 
 	end
 	
-	bindElement(newElement, uiLibrary.Keybinds.Right, showList())
+	bindElement(newElement, uiLibrary.Keybinds.Right, showList)
 	bindElement(newElement,uiLibrary.Keybinds.Enter,showList)
 	bindElement(newElement,uiLibrary.Keybinds.Back,hideList)
 	
