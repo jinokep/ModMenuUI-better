@@ -400,6 +400,9 @@ function dropdownPreset()
 	Dropdown.BorderSizePixel = 0
 	Dropdown.Size = UDim2.new(1, 0, 0, 20)
 	
+	local List = Instance.new("ScrollingFrame")
+	List.Size = UDim2.new(1,0,1,0)
+	List.Parent = Dropdown
 	
 end
 -----------------------------------------------------------------
@@ -521,8 +524,10 @@ function scroll(up)
 end
 
 function back()
+	if currentPage.Locked then
+		return
+	end
 	for _,page in pairs(pages) do
-		print(page.Locked)
 		local frame = page.Frame
 		if page.Name:lower() == "home" then
 			frame.Visible = true
@@ -780,7 +785,7 @@ function page:value(name,callback,startingValue,min,max,increment)
 	return setmetatable(newElement,element)
 end
 function page:dropdown(name,list,callback)
-	local frame = uiLibrary.Presets.Value:Clone()
+	local frame = uiLibrary.Presets.Dropdown:Clone()
 	frame.Name = name
 	frame.Visible = true
 	frame.Parent = self.Frame
@@ -795,6 +800,7 @@ function page:dropdown(name,list,callback)
 	newElement.Callback = callback
 	
 	local function showList()
+		fram
 		self.Locked = true
 	end
 	local function hideList()
